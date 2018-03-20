@@ -1,4 +1,4 @@
-(defproject evolville "0.0.1"
+(defproject evolville "0.0.2"
   :description "Evolville - Adventures of creatures living in generative world."
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
