@@ -1,8 +1,10 @@
 (ns evolville.config)
 
-(def age-rate 0.01)
+;; Defines how frequently spawner creature will produce new creature
+(def spawn-rate 3000) ;; once per 3 seconds
 
-(def breed-delay-rate 0.01)
-(def breed-delay 5)
+;; Defines the rate of ageing for creatures
+(def age-rate 0.04) ;; creature will lose 1 size per 1 second
 
-(def grow-rate 0.2)
+;; Defines the delay between breedings, also works like initial delay for children
+(def breed-delay 3000)

@@ -1,16 +1,15 @@
 (ns evolville.ageing
   (:require [evolville.world :as w]
-            [evolville.config :as config]))
+            [evolville.config :as config]
+            [evolville.util :as u]))
 
-(defn age [creature]
-  (update creature :size #(- % config/age-rate)))
-
-(defn dead? [{:keys [size]}]
-  (<= size 0))
+(defn age [world [id creature]]
+  (let [newsize (- (get-in creature [:size]) config/age-rate)]
+    (cond (<= newsize 0)
+          (u/dissoc-in world [:creatures id])
+          :else (assoc-in world [:creatures id :size] newsize))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn age-creatures [world]
-  (-> world
-      (w/for-each-creature age)
-      (w/filter-creatures (complement dead?))))
+  (w/for-each-creature world age))

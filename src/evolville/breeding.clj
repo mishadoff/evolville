@@ -2,75 +2,46 @@
   (:require [evolville.world :as w]
             [evolville.collision :as c]
             [evolville.creature :as ec]
+            [evolville.random :as random]
             [evolville.util :as u]
             [evolville.config :as config]))
 
 (defn- can-breed? [creature]
-  (or (nil? (:breed-delay creature))
-      (< (:breed-delay creature) 0)))
+  (let [now (System/currentTimeMillis)]
+    (<= (or (some-> creature :breed :available-at) now)
+        now)))
 
-(defn- breeds [world]
-  (let [creatures (w/creatures world) n (count creatures)]
-    (for [i (range n) j (range (inc i) n)
-          :let [[id1 c1] (nth creatures i)
-                [id2 c2] (nth creatures j)]
-          :when (and (can-breed? c1) (can-breed? c2) (c/collide? c1 c2))]
-      [[(ec/uuid)
-        {:loc (mapv #(/ (+ %1 %2) 2) (:loc c1) (:loc c2))
-         :size (/ (+ (:size c1) (:size c2)) 2)
-         :speed (/ (+ (:speed c1) (:speed c2)) 2)
-         :dir (/ (+ (:dir c1) (:dir c2)) 2)
-         :egg-size 0}]
-       id1
-       id2])))
-
-(defn- process-breed-pairs [world]
-  (let [breeds (breeds world)]
-    (->> world
-         ;; add eggs
-         (#(reduce
-             (fn [w [[id egg] _ _]]
-               (println id egg)
-               (assoc-in w [:eggs id] egg))
-             %
-             breeds))
-         ;; make parents non-breedable
-         (#(reduce
-             (fn [w [_ id1 id2]]
-               (-> w
-                   (assoc-in [:creatures id1 :breed-delay] config/breed-delay)
-                   (assoc-in [:creatures id2 :breed-delay] config/breed-delay)))
-             %
-             breeds)))))
-
-
-(defn- grow [egg]
-  (update egg :egg-size #(+ % config/grow-rate)))
-
-(defn- breed-wait [creature]
-  (update creature :breed-delay (fn [v] (when v (- v config/breed-delay-rate)))))
-
-(defn- promote-grew-eggs [world]
-  (let [eggs (w/eggs world)
-        grown-eggs (->> eggs
-                        (filter #(>= (:egg-size (second %)) (:size (second %))))
-                        (map first))]
-    (reduce
-      (fn [w id]
-        (let [creature (-> (get-in world [:eggs id])
-                           (dissoc :egg-size))]
-          (-> w
-              (assoc-in [:creatures id] creature)
-              (u/dissoc-in [:eggs id]))))
-      world
-      grown-eggs)))
-
+(defn breed [world [id creature]]
+  (cond
+    ;; if creature can not breed leave the world unchanged
+    (not (can-breed? creature)) world
+    :else
+    (let [mate-creature (->> (w/creatures world)
+                             ;; creature can not breed with itself
+                             (remove (fn [[pairid _]] (= pairid id)))
+                             ;; mate can breed as well
+                             (filter (fn [[_ mate]] (can-breed? mate)))
+                             ;; creature and its mate collide
+                             (filter (fn [[_ mate]] (c/collide? creature mate)))
+                             ;; first wins, as in real life
+                             (first))]
+      (cond (nil? mate-creature) world
+            :else
+            (let [now (System/currentTimeMillis)
+                  [mid mate] mate-creature
+                  [cid child]
+                  [(ec/uuid)
+                   {:loc (mapv #(/ (+ %1 %2) 2.0) (:loc creature) (:loc mate))
+                    :size (random/random 10 20)
+                    :speed (/ (+ (:speed creature) (:speed mate)) 2.0)
+                    :dir (/ (+ (:dir creature) (:dir mate)) 2.0)
+                    :breed {:available-at (+ now config/breed-delay)}}]]
+              (-> world
+                  (assoc-in [:creatures id :breed :available-at] (+ now config/breed-delay))
+                  (assoc-in [:creatures mid :breed :available-at] (+ now config/breed-delay))
+                  (assoc-in [:creatures cid] child)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn breeding [world]
-  (-> world
-      (w/for-each-egg grow)
-      (promote-grew-eggs)
-      (w/for-each-creature breed-wait)
-      (process-breed-pairs)))
+  (w/for-each-creature world breed))

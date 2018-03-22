@@ -12,15 +12,17 @@
         (< y 0) (overflow-y world (+ y (w/height world)))
         :else y))
 
-(defn move [world creature]
+(defn move [world [id creature]]
   (let [{:keys [loc speed dir]} creature
         [x y] loc
         delta-x (* speed (m/cos (m/->radians (- 360 dir))))
         delta-y (* speed (m/sin (m/->radians (- 360 dir))))]
-    (assoc creature :loc [(overflow-x world (+ x delta-x))
-                          (overflow-y world (+ y delta-y))])))
+    (assoc-in world
+              [:creatures id :loc]
+              [(overflow-x world (+ x delta-x))
+               (overflow-y world (+ y delta-y))])))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn move-creatures [world]
-  (w/for-each-creature world #(move world %)))
+  (w/for-each-creature world move))

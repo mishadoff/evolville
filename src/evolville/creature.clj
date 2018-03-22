@@ -4,9 +4,10 @@
 (defn uuid []
   (str (java.util.UUID/randomUUID)))
 
-(defn random [[width height]]
-  [(uuid)
-   {:loc [(r/random width) (r/random height)]
-    :size (r/random 5 15)
-    :speed (r/random 1 3)
-    :dir (r/random 360)}])
+(defn random [{:keys [size]}]
+  (let [[w h] size]
+    [(uuid)
+     {:loc [(r/random w) (r/random h)]
+      :size (r/random 10 20)
+      :speed (r/random 1 3)
+      :dir (r/random 360)}]))
