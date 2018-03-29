@@ -6,7 +6,9 @@
 (defn age [world [id creature]]
   (let [newsize (- (get-in creature [:size]) config/age-rate)]
     (cond (<= newsize 0)
-          (u/dissoc-in world [:creatures id])
+          (-> world
+              (u/dissoc-in [:creatures id])
+              (update-in [:stats :dead-age] u/safe-inc))
           :else (assoc-in world [:creatures id :size] newsize))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

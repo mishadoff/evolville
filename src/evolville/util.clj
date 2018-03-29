@@ -13,3 +13,6 @@
           (dissoc m k)))
       m)
     (dissoc m k)))
+
+(defn safe-inc [v]
+  (if v (inc v) 1))

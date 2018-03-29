@@ -38,7 +38,8 @@
                   (assoc-in [:creatures id :mate] _id)
                   (assoc-in [:creatures _id :breed :available-at] (+ now config/breed-delay))
                   (assoc-in [:creatures _id :mate] id)
-                  (assoc-in [:creatures cid] child)))))))
+                  (assoc-in [:creatures cid] child)
+                  (update-in [:stats :life-breeds] u/safe-inc)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

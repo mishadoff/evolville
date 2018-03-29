@@ -19,7 +19,7 @@
                                        (c/collide? creature _creature))))
                         (count))]
     (if (>= collisions 2)
-      world
+      (update-in world [:stats :dead-overpopulation] u/safe-inc)
       (assoc-in world [:creatures-new id] creature))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

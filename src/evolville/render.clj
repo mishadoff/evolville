@@ -16,7 +16,10 @@
       (format "Creatures: %d"
               #_(q/current-frame-rate)
               (-> world w/creatures count))
-      20 20)))
+      20 20)
+    (q/text (format "Breed: %d" (or (-> world :stats :life-breeds) 0)) 20 35)
+    (q/text (format "Aged:  %d" (or (-> world :stats :dead-age) 0)) 20 50)
+    (q/text (format "Overpopulated: %d" (or (-> world :stats :dead-overpopulation) 0)) 20 65)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28,4 +31,5 @@
 (defn draw [world]
   (q/background 255)
   (draw-creatures world)
+  (draw-stats world)
   (draw-stats world))
