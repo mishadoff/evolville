@@ -10,11 +10,11 @@
 
 (defn- draw-stats [world]
   #_(q/rect 300 300 90 90)
-  (q/rect 14 8 120 15)
+  #_(q/rect 14 8 120 15)
   (q/with-fill [0]
     (q/text
-      (format "FPS: %.2f, N: %d"
-              (q/current-frame-rate)
+      (format "Creatures: %d"
+              #_(q/current-frame-rate)
               (-> world w/creatures count))
       20 20)))
 
