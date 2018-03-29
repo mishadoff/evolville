@@ -31,10 +31,13 @@
                     :size (random/random 10 20)
                     :speed (random/random 2 4)#_(/ (+ (:speed creature) (:speed mate)) 2.0)
                     :dir (/ (+ (:dir creature) (:dir mate)) 2.0)
-                    :breed {:available-at (+ now config/breed-delay)}}]]
+                    :breed {:available-at (+ now config/breed-delay)}
+                    :parents #{id _id}}]]
               (-> world
                   (assoc-in [:creatures id :breed :available-at] (+ now config/breed-delay))
+                  (assoc-in [:creatures id :mate] _id)
                   (assoc-in [:creatures _id :breed :available-at] (+ now config/breed-delay))
+                  (assoc-in [:creatures _id :mate] id)
                   (assoc-in [:creatures cid] child)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

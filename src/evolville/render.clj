@@ -22,7 +22,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn init []
-  #_(q/frame-rate 4)
+  #_(q/frame-rate 10)
   (q/background 255))
 
 (defn draw [world]
