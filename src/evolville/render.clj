@@ -17,9 +17,9 @@
               #_(q/current-frame-rate)
               (-> world w/creatures count))
       20 20)
-    (q/text (format "Breed: %d" (or (-> world :stats :life-breeds) 0)) 20 35)
-    (q/text (format "Aged:  %d" (or (-> world :stats :dead-age) 0)) 20 50)
-    (q/text (format "Overpopulated: %d" (or (-> world :stats :dead-overpopulation) 0)) 20 65)))
+    (q/text (format "Breeding: %d" (or (-> world :stats :life-breeds) 0)) 20 35)
+    (q/text (format "Ageing:  %d" (or (-> world :stats :dead-age) 0)) 20 50)
+    (q/text (format "Overpopulation: %d" (or (-> world :stats :dead-overpopulation) 0)) 20 65)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
