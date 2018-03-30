@@ -13,3 +13,4 @@ Adventures of creatures living in generative world.
 - Life and Death
 - Ageing and Breeding
 - Overpopulation
+- Prebiotic soup now looks more like a balanced world.
