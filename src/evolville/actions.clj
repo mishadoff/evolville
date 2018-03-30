@@ -9,7 +9,7 @@
   (-> world
       (a/age-creatures)
       (o/overpopulation)
+      (b/breeding)
       (m/move-creatures)
       #_(s/spawn-creatures)
-      (b/breeding)
       ))

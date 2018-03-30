@@ -26,7 +26,6 @@
 
 (defn overpopulation [world]
   (let [w (w/for-each-creature world overpopulated)]
-    (println w)
     (-> w
         (assoc :creatures (or (:creatures-new w) {}))
         (dissoc :creatures-new))))

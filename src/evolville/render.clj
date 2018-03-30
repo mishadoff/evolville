@@ -24,8 +24,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn init []
-  #_(q/frame-rate 10)
+(defn init [{:keys [frame-rate] :or {frame-rate 60}}]
+  (q/frame-rate frame-rate)
   (q/background 255))
 
 (defn draw [world]

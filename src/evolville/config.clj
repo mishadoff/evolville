@@ -4,7 +4,7 @@
 (def spawn-rate 3000) ;; once per 3 seconds
 
 ;; Defines the rate of ageing for creatures
-(def age-rate 0.02) ;; creature will lose 1 size per 1 second
+(def age-rate 0.01) ;; creature will lose 1 size per 1 second
 
 ;; Defines the delay between breedings, also works like initial delay for children
 (def breed-delay 2000)
